@@ -1,0 +1,46 @@
+﻿@model Lab6.Models.ForumCategory
+@{
+    ViewBag.Title = Model.Name;
+}
+<h1>@ViewBag.Title</h1>
+<p>@Model.Description</p>
+
+<div class="input-group input-group-sm mb-1">
+    <div class="input-group-append">
+        @if (Context.User.Identity.IsAuthenticated)
+        {
+            <a class="btn btn-outline-info"  asp-controller="Posts" asp-action="Create" asp-route-categoryId="@Model.Id">
+                New post
+            </a>
+        }
+    </div>
+</div>
+
+<div class="col-12 postsList">
+    @foreach (var post in Model.Posts)
+    {
+    <div class="postItem row">
+        <div class="col-6">
+            <a style="font-size:1.5em" asp-controller="Posts" asp-action="GetPost" asp-route-id="@post.Id">
+                @post.Title
+            </a>
+            <p><small class="text-muted">@post.Author.Email, @post.CreateTime</small></p>
+        </div>
+        <div class="col-2">
+            <p class="card-text"><small class="text-muted">@post.Comments.Count replies</small></p>
+        </div>
+        <div class="col-4">
+            @if (@post.Comments.LastOrDefault() is { } comment)
+            {
+                <p>@comment.Author.Email, @comment.Time</p>
+            }
+            else
+            {
+                <p>@post.Author.Email, @post.CreateTime</p>
+            }
+        </div>
+    </div>
+            
+        
+    }
+</div>
